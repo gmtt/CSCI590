@@ -28,5 +28,6 @@ for group in groups:
     posts = group.find_elements_by_css_selector("li[data-pats='post_group_item']")
     for post in posts:
         print(post.find_element_by_class_name('title_text').text)
+        post.click()
 
 
