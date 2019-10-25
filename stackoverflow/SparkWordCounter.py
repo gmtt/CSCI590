@@ -12,6 +12,8 @@ spark = SparkSession \
     .appName("Python Spark SQL basic example") \
     .getOrCreate()
 
+FILTER_LIST = ['the', 'I', 'an', 'to']
+
 
 def word_count(row, freq):
     tag = row.tag
@@ -23,8 +25,18 @@ def word_count(row, freq):
 
     tokenized = text.split()
     esBigrams = ngrams(tokenized, freq)
-    text = collections.Counter(esBigrams).most_common(100)
+
+    if freq == 1:
+        text = collections.Counter(filter(filter_single_word, esBigrams)).most_common(100)
+    else:
+        text = collections.Counter(esBigrams).most_common(100)
     return {'tag': tag, 'text': text}
+
+
+def filter_single_word(t):
+    if t[0] in FILTER_LIST:
+        return False
+    return True
 
 
 if __name__ == '__main__':
