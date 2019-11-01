@@ -7,8 +7,7 @@ from nltk.util import ngrams
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 
-FILTER_LIST = ['the', 'I', 'an', 'to', 'is']
-
+FILTER_LIST = open("CommonWords.txt", "r").read().splitlines()
 
 def word_count(row, freq):
     tag = row.tag
@@ -29,7 +28,7 @@ def word_count(row, freq):
 
 
 def filter_single_word(t):
-    if t[0] in FILTER_LIST:
+    if t[0].lower() in FILTER_LIST:
         return False
     return True
 
