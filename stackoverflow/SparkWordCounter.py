@@ -7,12 +7,7 @@ from nltk.util import ngrams
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 
-spark = SparkSession \
-    .builder \
-    .appName("Python Spark SQL basic example") \
-    .getOrCreate()
-
-FILTER_LIST = ['the', 'I', 'an', 'to']
+FILTER_LIST = ['the', 'I', 'an', 'to', 'is']
 
 
 def word_count(row, freq):
@@ -39,7 +34,7 @@ def filter_single_word(t):
     return True
 
 
-if __name__ == '__main__':
+def spark_process(spark):
     # read data
     raw_data = spark.read.json('raw_data.json')
     explode_tag = raw_data.withColumn('tag', explode(raw_data.tags)).drop('tags')
@@ -59,3 +54,11 @@ if __name__ == '__main__':
         res = top_votes.rdd.map(lambda x: word_count(x, i)).collect()
         with open('top_votes_{}_grams.json'.format(i), 'w') as out:
             json.dump(res, out)
+
+
+if __name__ == '__main__':
+    spark = SparkSession \
+        .builder \
+        .appName("Python Spark SQL basic example") \
+        .getOrCreate()
+    spark_process(spark)

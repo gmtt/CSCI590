@@ -2,11 +2,8 @@ import json
 
 from stackapi import StackAPI
 
-SITE = StackAPI('stackoverflow')
-PAGE_SIZE = 10
 
-
-def fetch():
+def fetch(SITE, PAGE_SIZE):
     my_questions = []
     for page in range(1, 10):
         questions = SITE.fetch('/questions',
@@ -27,10 +24,11 @@ def fetch():
                 for answer in question['answers']:
                     my_question['answers'].append(answer['body_markdown'])
             my_questions.append(my_question)
-    return my_questions
+    with open('raw_data.json', 'w') as out:
+        json.dump(my_questions, out)
 
 
 if __name__ == '__main__':
-    data = fetch()
-    with open('raw_data.json', 'w') as out:
-        json.dump(data, out)
+    SITE = StackAPI('stackoverflow')
+    PAGE_SIZE = 10
+    fetch(SITE, PAGE_SIZE)
